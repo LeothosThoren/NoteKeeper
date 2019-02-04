@@ -3,10 +3,9 @@ package com.leothos.notekeeper.activities
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.ArrayAdapter
+import android.support.v7.widget.LinearLayoutManager
 import com.leothos.notekeeper.DataManager
-import com.leothos.notekeeper.NOTE_POSITION
-import com.leothos.notekeeper.NoteInfo
+import com.leothos.notekeeper.NoteRecyclerAdapter
 import com.leothos.notekeeper.R
 import kotlinx.android.synthetic.main.activity_note.*
 import kotlinx.android.synthetic.main.content_note.*
@@ -23,29 +22,20 @@ class NoteListActivity : AppCompatActivity() {
             startActivity(intentActivity)
         }
 
-        this.configureList()
+        this.configureRecyclerView()
     }
 
     //****************
     // Configurations
     //****************
 
-    private fun configureList() {
-        listNote.adapter = ArrayAdapter<NoteInfo>(
-            this, android.R.layout.simple_list_item_1, DataManager.notes
-        )
-
-        listNote.setOnItemClickListener { parent, view, position, id ->
-            val intent = Intent(this@NoteListActivity, AddNotesActivity::class.java)
-            intent.putExtra(NOTE_POSITION, position)
-            startActivity(intent)
-        }
-
+    private fun configureRecyclerView() {
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = NoteRecyclerAdapter(this, DataManager.notes)
     }
 
     override fun onResume() {
-        (listNote.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
         super.onResume()
-
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 }
